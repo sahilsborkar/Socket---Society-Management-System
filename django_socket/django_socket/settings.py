@@ -128,5 +128,5 @@ MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'blog-sochome'
+LOGIN_REDIRECT_URL = 'blog-soclist'
 LOGIN_URL = 'login'

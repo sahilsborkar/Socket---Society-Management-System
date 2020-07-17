@@ -1,7 +1,9 @@
 {% extends "blog/base.html" %}
 {% block content %}
     <h1> Socket: Welcome! View your societies below: </h1>
-    {% for post in posts%}
+    <h3>{{ society.name }} </h3>
+    <p>{{ society.description}}</p>
+    {% for post in posts %}
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">

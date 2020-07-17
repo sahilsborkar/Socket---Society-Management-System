@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <h1> Socket: Welcome! View your societies below: </h1>
+    {% for society in societies %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                </div>
+                <h2><a class="article-title" href="{% url 'blog-sochome' oid=society.id %}?society={{society}}">{{ society.name }}</a></h2>
+                <p class="article-content">{{ society.description }}</p>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
