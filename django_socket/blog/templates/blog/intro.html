@@ -31,13 +31,21 @@
       <img src="{%static 'blog/logo.png'%}" alt="SOCKET" width="90%">
       <h1>Changing the society game.</h1>
       <div class="centerer">
+      {% if user.is_authenticated %}
+        <div class="wrap">
+          <a class="btn-1" href="{% url 'blog-soclist'%}">CONTINUE</a>
+        </div>
+        <div class="wrap">
+              <a class="btn-1" href="{% url 'user-register'%}">SIGN UP</a>
+        </div>
+      {% else %}
         <div class="wrap">
           <a class="btn-1" href="{% url 'login'%}">LOG IN</a>
         </div>
         <div class="wrap">
               <a class="btn-1" href="{% url 'user-register'%}">SIGN UP</a>
         </div>
-
+      {% endif %}
       </div>
   </div>
 
