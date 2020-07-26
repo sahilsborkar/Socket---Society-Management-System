@@ -1,0 +1,21 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section"> 
+        <form method = "POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Join Society - Confirmation</legend>
+                <h6>{{society.description}}<br><br></h6>
+
+                <h4>Are you sure you want to join the society {{ society.name }}?</h4>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-success" type="submit">Join</button>
+                <a href="{%url 'join-society'%}"class="btn btn-outline-secondary">Cancel</a>
+
+            </div>
+        </form>
+    </div>    
+{% endblock content %}

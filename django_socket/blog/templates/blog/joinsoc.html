@@ -1,0 +1,41 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <h1> Join a society: </h1>
+    <p><br></p>
+    {% for society in societies %}
+        {% if forloop.first %}<div class="row">{% endif %}
+
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <article class="media content-section">
+                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <h2><a class="article-title" style="font-size: 24px;" href="{% url 'join-society-confirm' society_id=society.id %}">{{ society.name }}</a></h2>
+                        <p class="article-content">{{ society.description|truncatewords:10}}</p>
+                    </div>
+                </article>
+            </div>
+            
+        {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+        {% if forloop.last %}</div>{% endif %}
+            
+    {% endfor %}
+    {% if is_paginated %}
+
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{page.obj.previous_page_number}}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ page.obj.next_page_number }}">Next</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    {% endif %}
+{% endblock content %}

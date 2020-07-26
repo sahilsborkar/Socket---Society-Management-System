@@ -3,12 +3,22 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-
 # Create your models here.
+class SocietyMembership(models.Model):
+    member = models.ForeignKey(User, related_name='society_membership', on_delete=models.CASCADE)
+    society = models.ForeignKey('Society', on_delete=models.CASCADE)
+    is_leader = models.BooleanField(default=False)
+
+
 class Society(models.Model):
-    name = models.CharField(max_length = 200)
+    name = models.CharField(max_length = 200, unique=True)
     description = models.TextField()
-    members = models.ManyToManyField(User, verbose_name=("Members"))
+    members = models.ManyToManyField(
+        User,
+        verbose_name=("Members"),
+        related_name='societies',
+        through='SocietyMembership'
+    )
 
     def __str__(self):
         return f"{self.name}"
