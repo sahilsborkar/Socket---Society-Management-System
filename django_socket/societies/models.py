@@ -6,7 +6,7 @@ from django.urls import reverse
 # Create your models here.
 class SocietyMembership(models.Model):
     member = models.ForeignKey(User, related_name='society_membership', on_delete=models.CASCADE)
-    society = models.ForeignKey('Society', on_delete=models.CASCADE)
+    society = models.ForeignKey('Society', related_name='society_membership', on_delete=models.CASCADE)
     is_leader = models.BooleanField(default=False)
 
 
@@ -20,8 +20,45 @@ class Society(models.Model):
         through='SocietyMembership'
     )
 
+    @property
+    def leaders(self):
+        return self.society_membership.filter(is_leader=True)
+
+    def user_is_leader(self, user: User):
+        return self.society_membership.filter(is_leader=True, member=user).exists()
+
+    def is_member(self, user: User):
+        return self.members.filter(pk=user.id).exists()
+
     def __str__(self):
         return f"{self.name}"
+
+    def enroll(self, user: User, as_leader: bool = False):
+        # Django >= 2.2, which it should be in July 2020
+        self.members.add(user, through_defaults={"is_leader": as_leader})
+
+    def promote(self, user: User) -> bool:
+        try:
+            society_membership = self.society_membership.get(member=user)
+        except SocietyMembership.DoesNotExist:
+            return False
+
+        society_membership.is_leader = True
+        society_membership.save()
+        return True
+
+    def demote(self, user: User) -> bool:
+        try:
+            society_membership = self.society_membership.get(member=user)
+        except SocietyMembership.DoesNotExist:
+            return False
+
+        society_membership.is_leader = False
+        society_membership.save()
+        return True
+
+    def kick(self, user: User):
+        self.society_membership.filter(member=user).delete()
 
     @classmethod
     def create(cls, **kwargs):

@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from . import views
-from .views import PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, SocietyListView
+from .views import PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, SocietyListView, SocietyManageView
 
 urlpatterns = [
     path('', views.home, name='blog-home'),
@@ -12,6 +12,6 @@ urlpatterns = [
     path('society/<int:society_id>/post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('join-society/', SocietyListView.as_view(), name='join-society'),
     path('join-society-confirm/<int:society_id>/', views.society_join, name='join-society-confirm'),
-    path('society-leave/<int:society_id>/', views.society_leave, name='society-leave')
-
+    path('society-leave/<int:society_id>/', views.society_leave, name='society-leave'),
+    path('society/<int:society_id>/manage/', SocietyManageView.as_view(), name='society-manage')
 ]
