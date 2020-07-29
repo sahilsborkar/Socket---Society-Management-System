@@ -11,7 +11,7 @@ class SocietyMembership(models.Model):
 
 
 class Society(models.Model):
-    name = models.CharField(max_length = 200, unique=True)
+    name = models.CharField(max_length = 200, unique=False)
     description = models.TextField()
     members = models.ManyToManyField(
         User,
@@ -80,3 +80,10 @@ class SocPost(models.Model):
     
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'society_id':self.society.id, 'pk':self.pk})
+
+class SocietyProfile(models.Model):
+    society = models.OneToOneField(Society, on_delete=models.CASCADE, related_name='profile')
+    image = models.ImageField(default='default.jpg', upload_to='society_profile_pics')
+
+    def __str__(self):
+        return f"{self.society.name} Info"
