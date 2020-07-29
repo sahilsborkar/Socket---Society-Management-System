@@ -84,7 +84,7 @@ class SocietyListView(LoginRequiredMixin, ListView):
     template_name = 'blog/joinsoc.html'
     context_object_name = 'societies'
     ordering = [Lower('name')]
-    paginate_by = 20
+    paginate_by = 15
 
 def society_join(request, society_id):
     society = Society.objects.filter(id=society_id).first()
@@ -152,16 +152,16 @@ class SocietyManageView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 member = User.objects.filter(id=request.POST.get('promote', '')).first()
                 society.promote(member)
                 messages.success(request, f'You have promoted {member.first_name}!')
-                return redirect('blog-soclist')
+                return redirect('society-manage', self.kwargs['society_id'])
             elif 'demote' in request.POST:
                 member = User.objects.filter(id=request.POST.get('demote', '')).first()
                 society.demote(member)
                 messages.success(request, f'You have demoted {member.first_name}!')
-                return redirect('blog-soclist')
+                return redirect('society-manage', self.kwargs['society_id'])
             elif 'kick' in request.POST:
                 member = User.objects.filter(id=request.POST.get('kick', '')).first()
                 society.kick(member)
                 messages.success(request, f'You have removed {member.first_name}!')
-                return redirect('blog-soclist')
+                return redirect('society-manage', self.kwargs['society_id'])
 
 

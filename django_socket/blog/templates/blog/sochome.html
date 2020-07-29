@@ -1,16 +1,16 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1>{{ membership.society.name }} </h1>
-    <h5>{{ membership.society.description}}</h5>
-    <div class="border-top pt-3">
+    <div class="border-top pt-3 card nohover">
+        <div class="card-body">
+         <h1 style="padding-top:0;">{{ membership.society.name }} </h1>
+        <p>{{ membership.society.description}}<br><br></h5>
     {% if membership.is_leader%}
         <a href="{% url 'post-create' membership.society.id %}" class="btn btn-outline-info">Create Post</a>
         <a href="{% url 'society-manage' society_id=membership.society.id %}" class="btn btn-outline-success">Manage Society</a>
 
     {% endif %}
         <a href="{% url 'society-leave' society_id=membership.society.id %}" class="btn btn-outline-danger">Leave Society</a>
-
-        <p></p>
+        </div>
     </div>
     {% for post in posts %}
         <article class="media content-section">

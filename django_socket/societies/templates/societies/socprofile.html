@@ -1,6 +1,7 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+  {% if is_a_leader %}
     <div class="content-section">
       <div class="media">
         <img class="rounded-circle account-img" src="{{ society.profile.image.url }}">
@@ -13,8 +14,8 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">{{society.name}} Info:</legend>
-                {{ u_form|crispy }}
-                {{ p_form|crispy }}
+                {{ s_form|crispy }}
+                {{ sp_form|crispy }}
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Update</button>
@@ -22,4 +23,9 @@
         </form>
       <!-- FORM HERE -->
     </div>
+    {%else%}
+    <div>
+    <h1>You are not authenticated to edit this page.</h1>
+    </div>
+    {% endif %}
 {% endblock content %}

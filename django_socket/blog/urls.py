@@ -1,5 +1,6 @@
 from django.urls import path, re_path
 from . import views
+from societies import views as socviews
 from .views import PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, SocietyListView, SocietyManageView
 
 urlpatterns = [
@@ -13,5 +14,6 @@ urlpatterns = [
     path('join-society/', SocietyListView.as_view(), name='join-society'),
     path('join-society-confirm/<int:society_id>/', views.society_join, name='join-society-confirm'),
     path('society-leave/<int:society_id>/', views.society_leave, name='society-leave'),
-    path('society/<int:society_id>/manage/', SocietyManageView.as_view(), name='society-manage')
+    path('society/<int:society_id>/manage/', SocietyManageView.as_view(), name='society-manage'),
+    path('society/<int:society_id>/update', socviews.society_profile, name='society-profile')
 ]

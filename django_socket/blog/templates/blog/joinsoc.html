@@ -1,20 +1,19 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1> Join a society: </h1>
-    <p><br></p>
+    <h1 style="text-align:center;"> Join a society: </h1>
     {% for society in societies %}
         {% if forloop.first %}<div class="row">{% endif %}
 
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 ">
                 <article class="media content-section">
-                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <h2><a class="article-title" style="font-size: 24px;" href="{% url 'join-society-confirm' society_id=society.id %}">{{ society.name }}</a></h2>
-                        <p class="article-content">{{ society.description|truncatewords:10}}</p>
+                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 join-soc">
+                        <h2 style="text-align:center;" ><a class="article-title" style="font-size: 24px;" href="{% url 'join-society-confirm' society_id=society.id %}">{{ society.name }}</a></h2>
+                        <p style="text-align:center;" class="article-content">{{ society.description|truncatewords:10}}</p>
                     </div>
                 </article>
             </div>
             
-        {% if forloop.counter|divisibleby:4 %}</div><div class="row">{% endif %}
+        {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
         {% if forloop.last %}</div>{% endif %}
             
     {% endfor %}

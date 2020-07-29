@@ -1,7 +1,8 @@
 {% extends "blog/base.html" %}
 {% block content %}
     <h1>{{society.name}} - Admin</h1>
-    <p><br></p>
+    <a class="btn btn-outline-info mx-2" href="{%url 'society-profile' society_id=society.id%}"> Profile </a>
+    <p></p>
     {% for membership in memberships %}
         <div class="card" style="margin-bottom:1rem">
             <div class="card-body row">
@@ -19,7 +20,7 @@
                         {% else %}
                             <button type="submit" name="promote" value="{{membership.member.id}}" class="btn btn-outline-success mx-2">Promote</button>
                         {% endif %}
-                            <button type="submit" name="kick" value="{{membership.member.id}}" class="btn btn-outline-dark mx-2">Remove</a>
+                            <button type="submit" name="kick" value="{{membership.member.id}}" class="btn btn-outline-dark mx-2">Remove</button>
                         {%endif%}
                     </form>
 

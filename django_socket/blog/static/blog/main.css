@@ -6,8 +6,12 @@ body {
   
   h1, h2, h3, h4, h5, h6 {
     color: #444444;
+    padding: 1.5rem;
   }
   
+  p {
+    padding:1rem;
+  }
 
   ul {
     margin: 0;
@@ -38,16 +42,20 @@ body {
     transition:0.7s;
   }
 
-  .content-section:hover {
+  .content-section:not(.nohover):hover {
     background-color: #b3d9ff;
   }
   
+  .media-body h2 {
+      padding-bottom:0;
+      text-align:center
+  }
   .article-title {
     color: #444444;
   }
   
   a.article-title:hover {
-    color: #ffffff;
+    color: #4e6df7;
     text-decoration: none;
   }
   
@@ -92,8 +100,13 @@ body {
   .card {
     transition:0.7s;
   }
-  .card:hover  {
+  .card:not(.nohover):hover  {
     background-color: #b3d9ff;
   }
 
-  
+.join-soc {
+    height:250px;
+}
+.join-soc h2 {
+  padding-bottom:0;
+}
