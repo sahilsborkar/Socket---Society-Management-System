@@ -16,8 +16,12 @@ def home(request):
 @login_required
 def soclist(request):
     current_user = request.user
+    leader_memberships = SocietyMembership.objects.filter(member=current_user, is_leader=True)
+    normal_memberships = SocietyMembership.objects.filter(member=current_user, is_leader=False)
     context = {
-        'societies':current_user.societies.all()
+        'societies':current_user.societies.all(),
+        'leader_memberships': leader_memberships,
+        'normal_memberships': normal_memberships
     }
     return render(request, 'blog/soclist.html', context)
 
@@ -85,6 +89,13 @@ class SocietyListView(LoginRequiredMixin, ListView):
     context_object_name = 'societies'
     ordering = [Lower('name')]
     paginate_by = 15
+    
+    def get_queryset(self):
+        user = self.request.user
+        joined_societies = user.societies.all()
+
+        qs = super().get_queryset()
+        return qs.exclude(id__in=joined_societies)
 
 def society_join(request, society_id):
     society = Society.objects.filter(id=society_id).first()

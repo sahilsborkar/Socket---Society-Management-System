@@ -1,12 +1,45 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1 style="text-align:center;"> Welcome! View your societies below: </h1>
-    {% for society in societies %}
-        <article class="media content-section">
-            <div class="media-body">
-                <h2><a class="article-title" href="{% url 'blog-sochome' oid=society.id %}?society={{society}}">{{ society.name }}</a></h2>
-                <p class="article-content">{{ society.description }}</p>
+    <div class="row" style="width:100%;">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="my-3 px-3 rounded-lg" style="border-bottom: 2px solid #ddd;">
+                <h1> Welcome! View your societies below: </h1>
             </div>
-        </article>
-    {% endfor %}
+        </div>
+    <div>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="mx-4">
+            <h1 style="font-size:2em;"> Society Management </h1>
+            {% for membership in leader_memberships %}
+                    <div class="my-3 px-3 rounded-lg shadow div-hover soclist">
+                        <h3 class="border-bottom border-gray mb-0"><a class="container-title" href="{% url 'blog-sochome' oid=membership.society.id %}?society={{membership.society}}">{{ membership.society.name }}</a></h3>
+                        <p class="container-content">{{ membership.society.description|truncatewords:50 }}</p>
+                    </div>
+            {% empty %}
+                    <div class="my-3 px-3 rounded-lg shadow div-hover" style="height:200px;">
+                        <h3 class="border-bottom border-gray mb-0">No societies under your management.</h3>
+                        <p class="container-content">You are not a leader of any societies yet. Go ahead and create one! Or, you know, get promoted.</p>
+                    </div>
+            {% endfor %}
+            </div>
+    </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="mx-4">
+                <h1 style="font-size:2em;"> General Membership </h1>
+                {% for membership in normal_memberships %}
+                    <div class="my-3 px-3 rounded-lg shadow div-hover soclist">
+                        <h3 class="border-bottom border-gray mb-0"><a class="container-title" href="{% url 'blog-sochome' oid=membership.society.id %}?society={{membership.society}}">{{ membership.society.name }}</a></h3>
+                        <p class="container-content">{{ membership.society.description|truncatewords:50 }}</p>
+                    </div>
+                {% empty %}
+                    <div class="my-3 px-3 rounded-lg shadow div-hover" style="height:200px;">
+                        <h3 class="border-bottom border-gray mb-0">No societies found.</h3>
+                        <p class="container-content">You are not a part of any societies yet. Go ahead and create/join one!</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock content %}
