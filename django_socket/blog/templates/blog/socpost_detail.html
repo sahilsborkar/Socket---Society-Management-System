@@ -1,23 +1,24 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1> Socket: Welcome! View your societies below: </h1>
-        <article class="media content-section">
-            <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" />
-            <div class="media-body">
-                <div class="article-metadata">
-                    <div>
-                        <a class="mr-2" href="#">{{ object.author }}</a>
-                        <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
-                    </div>
-                    {% if object.author == user %}
-                    <div class="float-right">
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' society_id=object.society.id pk=object.id%}">Update</a>
-                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' society_id=object.society.id pk=object.id%}">Delete</a>
-                    </div>
-                    {% endif %}
+    <h1> Post Details: Edit/Delete Post</h1>
+        <div class="my-3 px-5 pt-4 pb-2 bg-white shadow-sm rounded-lg">
+            <div class="row">
+                <div class="col-xs-1 pl-4">
+                    <img class="rounded-circle post-image" src="{{ object.author.profile.image.url }}" />
                 </div>
-                <h2><a class="article-title" href="#">{{ object.title }}</a></h2>
-                <p class="article-content">{{ object.content }}</p>
+                <div class="col-xs-4 pt-1">
+                    <a class="mr-2 post-author-name" href="#">{{ object.author.first_name }} {{ post.author.last_name }}</a>
+                    <small class="text-muted post-time"><br>{{ object.date_posted|date:"F d, Y" }}</small>
+                </div>
+                <div class="col-xs-7 ml-4 pt-2">
+                    <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-update' society_id=object.society.id pk=object.id%}">&#9998;</a>
+                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' society_id=object.society.id pk=object.id%}">X</a>                
+                </div>
             </div>
-        </article>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="post-content">{{ object.content }}</p>
+                </div>
+            </div>
+        </div>
 {% endblock content %}

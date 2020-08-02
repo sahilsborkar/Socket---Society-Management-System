@@ -9,7 +9,8 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">        
         <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
-
+        <!-- Scrollbar Custom CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css"> 
         {% if title %}
             <title>Socket: {{ title }} </title>
         {% else %}
@@ -27,19 +28,26 @@
                 </a>
             </div>
             <ul class="list-unstyled components text-center" >
+                {% if user.is_authenticated %}
                 <div class="text-center sidebar-profile">
                     <a href="{% url 'profile' %}">
-                        <img class="img-fluid px-5 rounded-circle py-3" src="{{ user.profile.image.url }}">
+                        <img class="rounded-circle" src="{{ user.profile.image.url }}">
                         <h3>{{user.first_name}} {{user.last_name}}</h3>
                     </a>
                 </div>
-                <li class="active">
-                    <a href="{% url 'blog-soclist' %}">Society List</a>
+                {% endif %}
+                {% url 'blog-soclist' as soclist %}
+                {% url 'join-society' as joinsoc %}
+                {% url 'society-register' as socregister %}
+
+                <li {%if request.path == soclist%} class="active"{%endif%}>
+                    <a href="{% url 'blog-soclist' %}" >Society List</a>
                 </li>
-                <li>
+
+                <li {%if request.path == joinsoc%} class="active"{%endif%}>
                     <a href="{% url 'join-society' %}">Join Society</a>
                 </li>
-                <li>
+                <li {%if request.path == socregister%} class="active"{%endif%}>
                     <a href="{% url 'society-register' %}">Create Society</a>
                 </li>
                 <li>
@@ -67,9 +75,9 @@
         <div id="main-content">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <button type="button" id="sidebarCollapse" class="btn btn-outline-secondary">
+                    <button type="button" id="sidebarCollapse" class="btn btn-light">
                         <i class="fas fa-align-left"></i>
-                        <span style="font-size: 25px; padding=1px;">&#8801</span>
+                        <span style="font-size: 40px; padding=1px;">&#8801</span>
                     </button>
                     <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fas fa-align-justify"></i>
@@ -98,7 +106,7 @@
                     </div>
                 </div>
             </nav>
-            <div class="pl-4">
+            <div class="mx-5 pt-4">
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags}}">
@@ -117,11 +125,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
             $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
+                $('#sidebar, #main-content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
         });
     </script>
