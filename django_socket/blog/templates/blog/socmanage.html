@@ -1,32 +1,39 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1>{{society.name}} - Admin</h1>
-    <a class="btn btn-outline-info mx-2" href="{%url 'society-profile' society_id=society.id%}"> Profile </a>
-    <p></p>
-    {% for membership in memberships %}
-        <div class="card" style="margin-bottom:1rem">
-            <div class="card-body row">
-                <div class="box-left-element col-xs-6 col-sm-6 col-md-8 col-lg-8 text-center">
-                    <h2>{{membership.member.first_name}}</h2>
+    <div class="rounded-lg shadow-sm bg-white sochome-banner mb-3">
+        <h1 class="sochome-title">{{ society.name }}: Admin Panel</h1>
+        <div class="text-center mt-4">
+            <a class="btn btn-outline-info mx-2" href="{%url 'society-profile' society_id=society.id%}"> Society Info </a>
+        </div>
+    </div>
+    {% for membership in memberships %} 
+        {% if forloop.first %}<div class="row">{% endif %}
+        <div class="col-sm-4">
+        <div class="rounded-lg shadow-sm bg-white socmanage-box row my-3 mx-2">
+                <div class="col-sm-6 pt-2">
+                    <h3 class="text-left">{{membership.member.first_name}}</h3>
                 </div>
-                <div class="box-right-element col-xs-6 col-sm-6 col-md-4 col-lg-4 text-center">    
+                <div class="col-sm-6 text-right pt-2 text-center">    
                     <form method='POST'>
                     {% csrf_token %}
                     {% if user == membership.member %}
-                        <button name="leave" class="btn btn-outline-danger mx-2">Leave</button>
+                        <button name="leave" class="btn btn-sm btn-danger mx-2 mt-4">Leave</button>
                     {% else %}
                         {% if membership.is_leader %}
-                            <button type="submit" name="demote" value="{{membership.member.id}}" class="btn btn-outline-danger mx-2">Demote</button>
+                            <button type="submit" name="demote" value="{{membership.member.id}}" class="btn btn-sm btn-danger mx-2 mb-2">Demote</button>
                         {% else %}
-                            <button type="submit" name="promote" value="{{membership.member.id}}" class="btn btn-outline-success mx-2">Promote</button>
+                            <button type="submit" name="promote" value="{{membership.member.id}}" class="btn btn-sm btn-success mx-2 mb-2">Promote</button>
                         {% endif %}
-                            <button type="submit" name="kick" value="{{membership.member.id}}" class="btn btn-outline-dark mx-2">Remove</button>
+                            <button type="submit" name="kick" value="{{membership.member.id}}" class="btn btn-sm btn-dark mx-2">Remove</button>
                         {%endif%}
                     </form>
 
                 </div>
-            </div>
         </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+        {% if forloop.last %}</div>{% endif %}
     {% endfor %}
 
 

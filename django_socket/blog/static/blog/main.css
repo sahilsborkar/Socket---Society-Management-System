@@ -129,9 +129,9 @@ body {
 }
 
 
-/*****************/
+/************************************/
 /***** POSTS (AND SOCIETY HOME) *****/
-/*****************/
+/************************************/
 
 .sochome-banner {
   padding:1em 3em 3em 3em; 
@@ -167,6 +167,10 @@ body {
   height: 65px;
   width: 65px;
   margin-right:1.4em;
+}
+
+.socmanage-box {
+  padding:1em 3em 1em 3em;
 }
 
 /*****************/

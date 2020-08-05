@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 from .forms import SocietyJoinForm, SocietyLeaveForm, SocietyManageForm
 from django.contrib import messages
 from django.db.models.functions import Lower
+from django.db.models import Q
+
 
 
 def home(request):
@@ -93,9 +95,14 @@ class SocietyListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         joined_societies = user.societies.all()
-
-        qs = super().get_queryset()
-        return qs.exclude(id__in=joined_societies)
+        qs = super().get_queryset().exclude(id__in=joined_societies)
+        query = self.request.GET.get('search')
+        if query:
+            socresult = qs.filter(Q(name__icontains=query) | Q(description__icontains=query))
+            qs = socresult
+        else:
+            qs = super().get_queryset().exclude(id__in=joined_societies)
+        return qs
 
 def society_join(request, society_id):
     society = Society.objects.filter(id=society_id).first()
@@ -175,4 +182,8 @@ class SocietyManageView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 messages.success(request, f'You have removed {member.first_name}!')
                 return redirect('society-manage', self.kwargs['society_id'])
 
-
+# def get_post_queryset(query=None):
+#    queryset = []
+#    queries = query.split(" ")
+#    for q in queries:
+#        items = 
