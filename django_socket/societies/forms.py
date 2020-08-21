@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Society, SocietyProfile
+from .models import Society, SocietyProfile, SocComment
 
 class SocietyRegisterForm(ModelForm):
     class Meta:
@@ -16,3 +16,8 @@ class SocietyProfileUpdateForm(ModelForm):
     class Meta:
         model = SocietyProfile
         fields = ['image']
+
+class CommentCreateForm(ModelForm):
+    class Meta:
+        model = SocComment
+        fields = ['content']

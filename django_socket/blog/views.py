@@ -3,9 +3,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from societies.models import Society, SocPost, SocietyMembership
+from societies.models import Society, SocPost, SocietyMembership, SocComment
 from django.urls import reverse_lazy
 from .forms import SocietyJoinForm, SocietyLeaveForm, SocietyManageForm
+from societies.forms import CommentCreateForm
 from django.contrib import messages
 from django.db.models.functions import Lower
 from django.db.models import Q
@@ -31,10 +32,20 @@ def soclist(request):
 def sochome(request, oid):
     society = Society.objects.filter(id=oid).first()
     membership = SocietyMembership.objects.get(member=request.user, society=society)
+    if request.method == 'POST':
+        post = SocPost.objects.filter(id=request.POST.get('post_id', '')).first()
+        #form = CommentCreateForm(request.POST)
+        #if form.is_valid():
+        ##    form.post = post
+        #    form.author = request.user
+        #    form.save()
+        #    return HTTPResponse('')
+        SocComment.objects.create(post=post, author=request.user, content=request.POST['comment'])
+    else:
+        form = CommentCreateForm()
     context = {
         'membership': membership,
         'posts': society.posts.all().order_by('-date_posted')
-
     }
     return render(request, 'blog/sochome.html', context)
 
@@ -51,6 +62,12 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         form.instance.society = Society.objects.filter(pk=self.kwargs.get('society_id')).first()
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["society"] =  Society.objects.filter(pk=self.kwargs.get('society_id')).first()
+        return context
+    
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = SocPost
@@ -98,7 +115,8 @@ class SocietyListView(LoginRequiredMixin, ListView):
         qs = super().get_queryset().exclude(id__in=joined_societies)
         query = self.request.GET.get('search')
         if query:
-            socresult = qs.filter(Q(name__icontains=query) | Q(description__icontains=query))
+            q = " " + query + " "
+            socresult = qs.filter(Q(name__icontains=q) | Q(description__icontains=q))
             qs = socresult
         else:
             qs = super().get_queryset().exclude(id__in=joined_societies)

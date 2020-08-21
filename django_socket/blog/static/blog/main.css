@@ -169,8 +169,42 @@ body {
   margin-right:1.4em;
 }
 
+
+.comment-image {
+  height: 45px;
+  width: 45px;
+  margin-right:1.4em;
+}
+
+.comment-content {
+  padding-top:20px;
+  font-size: 0.9em;
+  line-height:1.6em;
+  color:#272727;
+}
+
+.comment-author-name {
+  font-family:'Open Sans', sans-serif;
+  font-weight:600;
+  color:#000;
+  font-size:1em;
+}
+
+.comment-author-name:link {
+  text-decoration:none;
+}
+
+.comment-time {
+  font-size:0.8em;
+}
+
+
 .socmanage-box {
   padding:1em 3em 1em 3em;
+}
+
+p.joinsoc_desc{
+  font-size:1.2em;
 }
 
 /*****************/

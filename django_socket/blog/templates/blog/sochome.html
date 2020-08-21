@@ -13,7 +13,7 @@
         </div>
     </div>
     {% for post in posts %}
-        <div class="my-3 px-5 pt-4 pb-2 bg-white shadow-sm rounded-lg">
+        <div class="mt-3 px-5 pt-4 pb-2 bg-white shadow-sm" style="border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
             <div class="row">
                 <div class="col-xs-1 pl-4">
                     <img class="rounded-circle post-image" src="{{ post.author.profile.image.url }}" />
@@ -31,6 +31,54 @@
                     <p class="post-content">{{ post.content }}</p>
                 </div>
             </div>
+            
+        </div>
+        
+        <div class="mb-3 pr-5 pt-4 pb-2 bg-light shadow-sm border-light" style="border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+            <div class="col-sm-12 pl-5 pb-5">
+                <form class="form-inline" method="POST" action="" style="display:flex" id="comment"> {% csrf_token %}
+                    <input type="search" name="comment" placeholder="New comment" class="form-control mr-sm-2 p-4" style="flex-grow:1;">  
+                    <button name="post_id" class="btn btn-info my-2 my-sm-0 " value="{{post.id}}"> Post </button>
+                </form>
+            </div>
+            {% for comment in post.comments.all %}
+            
+            <div class="row">
+                <div class="col-xs-1 offset-1 pl-4">
+                    <img class="rounded-circle comment-image" src="{{ comment.author.profile.image.url }}" />
+                </div>
+                <div class="col-xs-4">
+                    <a class="mr-2 comment-author-name" href="#">{{ comment.author.first_name }} {{ comment.author.last_name }}</a>
+                    <small class="text-muted comment-time"><br>{{ comment.date_posted|date:"F d, Y" }}</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 offset-1">
+                    <p class="comment-content">{{ comment.content }}</p>
+                </div>
+            </div>
+        
+        {% empty %}
+        <div class="px-5">
+            <p>No comments for this post.</p>
+        </div>
+        
+        {% endfor %}
         </div>
     {% endfor %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        //$(document).on('submit','comment', function(e){
+        //    e.preventDefault();
+        //    $.ajax({
+        //        type:'POST',
+        //        url:'blog-sochome',
+        //        data:{
+        //            post_id:$('#post-of-comment').val(),
+        //            content:$('#comment').val(),
+        //        }
+        //    });
+        //});
+    </script>
 {% endblock content %}

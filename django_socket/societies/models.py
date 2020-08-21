@@ -74,12 +74,22 @@ class SocPost(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     society = models.ForeignKey(Society, on_delete=models.CASCADE, related_name="posts")
+    date_posted = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
     
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'society_id':self.society.id, 'pk':self.pk})
+
+class SocComment(models.Model):
+    post = models.ForeignKey(SocPost, on_delete=models.CASCADE, related_name="comments")
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.content
 
 class SocietyProfile(models.Model):
     society = models.OneToOneField(Society, on_delete=models.CASCADE, related_name='profile')
