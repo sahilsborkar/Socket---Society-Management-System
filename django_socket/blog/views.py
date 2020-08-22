@@ -10,8 +10,8 @@ from societies.forms import CommentCreateForm
 from django.contrib import messages
 from django.db.models.functions import Lower
 from django.db.models import Q
-
-
+from django.http import JsonResponse, HttpResponse
+import sys
 
 def home(request):
     return render(request, 'blog/intro.html')
@@ -32,22 +32,30 @@ def soclist(request):
 def sochome(request, oid):
     society = Society.objects.filter(id=oid).first()
     membership = SocietyMembership.objects.get(member=request.user, society=society)
+    response_data = {}
     if request.method == 'POST':
-        post = SocPost.objects.filter(id=request.POST.get('post_id', '')).first()
-        #form = CommentCreateForm(request.POST)
-        #if form.is_valid():
-        ##    form.post = post
-        #    form.author = request.user
-        #    form.save()
-        #    return HTTPResponse('')
-        SocComment.objects.create(post=post, author=request.user, content=request.POST['comment'])
-    else:
-        form = CommentCreateForm()
+    #    if request.POST.get('comment').isspace() == False:
+    #        post = SocPost.objects.filter(id=request.POST.get('post_id', '')).first()
+    #        SocComment.objects.create(post=post, author=request.user, content=request.POST['comment'])
+        postID = request.POST.get('post_id')
+        comment_content = request.POST.get('comment')
+        response_data = {
+            'post_id': postID,
+            'comment': comment_content
+        }
+        post = SocPost.objects.filter(id=postID).first()
+        SocComment.objects.create(post=post, author=request.user, content=comment_content)
+        print(response_data, file=sys.stderr)
+        print("SUCCESS JSON RESPONSE TO CLIENT SIDE", file=sys.stderr)
+        return JsonResponse(response_data)
+    
     context = {
         'membership': membership,
         'posts': society.posts.all().order_by('-date_posted')
     }
     return render(request, 'blog/sochome.html', context)
+
+
 
 class PostDetailView(LoginRequiredMixin, DetailView):
     model = SocPost

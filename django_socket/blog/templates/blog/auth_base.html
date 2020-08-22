@@ -1,103 +1,111 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">        
-        <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
+{% extends "blog/base.html" %}
+{% block content %}
+    <div class="rounded-lg shadow-sm bg-white sochome-banner">
+        <h1 class="sochome-title">{{ membership.society.name }} </h1>
+        <p class="post-content">{{ membership.society.description}}<br><br>
+        <div class="text-center" style="margin-top:-2em;">
+        {% if membership.is_leader%}
+            <a href="{% url 'post-create' membership.society.id %}" class="btn btn-outline-info">Create Post</a>
+            <a href="{% url 'society-manage' society_id=membership.society.id %}" class="btn btn-outline-success">Manage Society</a>
 
-        {% if title %}
-            <title>Socket: {{ title }} </title>
-        {% else %}
-            <title>Socket</title>
         {% endif %}
-        
-    </head>
-    <body class="bg-light">
-        <div id="wrapper">
-            <div id="sidebar-wrapper">
-                <ul class="sidebar-nav">
-                    <li>Home</li>
-                    <li>Profile</li>
-                    <li>Society List</li>
-                    <li>Join Society</li>
-                    <li>Create New Society</li>
-                    <li>Settings</li>
-                    <li>Contact Us</li>
-                    <li>Logout</li>
-                </ul>
-            </div> 
-            <main role="main" class="container-fluid" >
-                <div class="row">
-                    <div class="col-md-12">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags}}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    {% block content %}{% endblock %}
-                    </div>
-                </div>
-            </main>
+            <a href="{% url 'society-leave' society_id=membership.society.id %}" class="btn btn-outline-danger">Leave Society</a>
         </div>
-
-        <header class="site-header">
-            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-                <div class="container">
-                <a class="navbar-brand mr-4" href="{% url 'blog-home'%}">SOCKET</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarToggle">
-                    <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'blog-soclist'%}">Home</a>
-                    <a class="nav-item nav-link" href="{% url 'join-society'%}">Join a Society</a>
-                    <a class="nav-item nav-link" href="{% url 'society-register'%}">Create Society</a>
-                    </div>
-                    <!-- Navbar Right Side -->
-                    <div class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <a class="nav-item nav-link" href="{% url 'profile'%}">Profile</a>
-                        <a class="nav-item nav-link" href="{% url 'logout'%}">Logout</a>
-                    {% else %}
-                        <a class="nav-item nav-link" href="{% url 'login'%}">Login</a>
-                        <a class="nav-item nav-link" href="{% url 'user-register'%}">Register</a>
-                    {% endif %}
-                    </div>
+    </div>
+    {% for post in posts %}
+        <div class="mt-3 px-5 pt-4 pb-2 bg-white shadow-sm" style="border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+            <div class="row">
+                <div class="col-xs-1 pl-4">
+                    <img class="rounded-circle post-image" src="{{ post.author.profile.image.url }}" />
                 </div>
+                <div class="col-xs-4 pt-1">
+                    <a class="mr-2 post-author-name" href="#">{{ post.author.first_name }} {{ post.author.last_name }}</a>
+                    <small class="text-muted post-time"><br>{{ post.date_posted|date:"F d, Y" }}</small>
                 </div>
-            </nav>
-        </header>
-         
-        <main role="main" class="container-fluid" >
-        <div class="row">
-            <div class="col-md-12">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags}}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            {% block content %}{% endblock %}
+                <div class="col-xs-7 ml-3 pt-2">
+                    <a href="{% url 'post-detail' society_id=membership.society.id pk=post.id %}" class="btn btn-light btn-sm">Click for more options</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="post-content">{{ post.content }}</p>
+                </div>
             </div>
         </div>
-        </main>
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script>
-            $("#menu-toggle").click( function (e){
-                e.preventDefault();
-                $("#wrapper").toggleClass("menuDisplayed");
+
+        <div class="mb-3 pr-5 pt-4 pb-2 bg-light shadow-sm border-light" style="border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+            <div class="col-sm-12 pl-5 pb-5">
+                <form class="form-inline" method="POST" style="display:flex"> {% csrf_token %}
+                    <input type="search" name="comment" id="{{ post.id }}" placeholder="New comment" class="form-control mr-sm-2 p-4" style="flex-grow:1;">  
+                    <button name="post_id" class="btn btn-info my-2 my-sm-0 " value="{{post.id}}" onclick='update_comments({{post.id}})'> Post </button>
+                </form>
+            </div>
+            {% for comment in post.comments.all %}
+                <div class="row">
+                    <div class="col-xs-1 offset-1 pl-4">
+                        <img class="rounded-circle comment-image" src="{{ comment.author.profile.image.url }}" />
+                    </div>
+                    <div class="col-xs-4">
+                        <a class="mr-2 comment-author-name" href="#">{{ comment.author.first_name }} {{ comment.author.last_name }}</a>
+                        <small class="text-muted comment-time"><br>{{ comment.date_posted|date:"F d, Y" }}</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 offset-1">
+                        <p class="comment-content">{{ comment.content }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="px-5">
+                    <p>No comments for this post.</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        //$(document).on('submit','comment', function(e){
+        //    e.preventDefault();
+        //    $.ajax({
+        //        type:'POST',
+        //        url:'blog-sochome',
+        //        data:{
+        //            post_id:$('#post-of-comment').val(),
+        //            content:$('#comment').val(),
+        //        }
+        //    });
+        //});
+        function update_comments(post_id) {
+            $.ajax({
+                type:'POST',
+                url:'{% url "blog-sochome" %}',
+                data:{
+                    'post_id': post_id,
+                    'comment': document.getElementById(post_id.toString()).value,
+                    'csrfmiddlewaretoken':$("input[name=csrfmiddlewaretoken]").val(),
+                    'action': comment_update
+                }
             });
-        </script>
-    </body>
-</html>
+        };
+
+        
+
+        /*$("[id^='-comment']").on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                type:'POST',
+                url:'{% url "blog-sochome" %}',
+                data:{
+                    title:$('#title').val(),
+                    description:$('#description').val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            }
+            });
+        });*/
+    </script>
+{% endblock content %}

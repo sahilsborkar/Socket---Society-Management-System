@@ -6,7 +6,7 @@ from .views import PostDetailView, PostCreateView, PostUpdateView, PostDeleteVie
 urlpatterns = [
     path('', views.home, name='blog-home'),
     path('soclist', views.soclist, name='blog-soclist'),
-    re_path(r'^sochome/(?P<oid>[0-9]+)/$', views.sochome, name='blog-sochome'),
+    path('sochome/<int:oid>/', views.sochome, name='blog-sochome'),
     path('society/<int:society_id>/post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('society/<int:society_id>/post/new/', PostCreateView.as_view(), name='post-create'),
     path('society/<int:society_id>/post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),

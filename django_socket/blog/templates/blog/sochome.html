@@ -1,6 +1,6 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <div class="rounded-lg shadow-sm bg-white sochome-banner">
+    <div class="rounded-lg shadow-sm bg-white sochome-banner" id="soc-banner">
         <h1 class="sochome-title">{{ membership.society.name }} </h1>
         <p class="post-content">{{ membership.society.description}}<br><br>
         <div class="text-center" style="margin-top:-2em;">
@@ -34,11 +34,11 @@
             
         </div>
         
-        <div class="mb-3 pr-5 pt-4 pb-2 bg-light shadow-sm border-light" style="border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+        <div id="{{post.id}}-comment-section" class="mb-3 pr-5 pt-4 pb-2 bg-light shadow-sm border-light" style="border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
             <div class="col-sm-12 pl-5 pb-5">
                 <form class="form-inline" method="POST" action="" style="display:flex" id="comment"> {% csrf_token %}
-                    <input type="search" name="comment" placeholder="New comment" class="form-control mr-sm-2 p-4" style="flex-grow:1;">  
-                    <button name="post_id" class="btn btn-info my-2 my-sm-0 " value="{{post.id}}"> Post </button>
+                    <input id="{{post.id}}" type="search" name="comment" placeholder="New comment" class="form-control mr-sm-2 p-4" style="flex-grow:1;">  
+                    <button name="post_id" class="btn btn-info my-2 my-sm-0 " value="{{post.id}}" onclick="update_comment({{post.id}}, event)"> Post </button>
                 </form>
             </div>
             {% for comment in post.comments.all %}
@@ -66,19 +66,101 @@
         {% endfor %}
         </div>
     {% endfor %}
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
     <script type="text/javascript">
-        //$(document).on('submit','comment', function(e){
-        //    e.preventDefault();
-        //    $.ajax({
-        //        type:'POST',
-        //        url:'blog-sochome',
-        //        data:{
-        //            post_id:$('#post-of-comment').val(),
-        //            content:$('#comment').val(),
-        //        }
-        //    });
-        //});
+        function update_comment(post_id, event) {
+            event.preventDefault();
+            $.ajax({
+                type:'POST',
+                url:'{% url 'blog-sochome' oid=membership.society.id%}',
+                data:{
+                    'post_id': post_id,
+                    'comment': document.getElementById(post_id.toString()).value,
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType:'text',
+                /*success: function () {
+                    OnSuccess(data.post_id, data.comment)
+                },
+                error: function () {
+                    OnError(data.post_id, data.comment)
+                },*/
+                success:function(json) {
+                    // Handle the complete event
+                    var data = JSON.parse(json);
+                    var commentSectionID = data.post_id + "-comment-section";
+                    var newComment = '<div class="row">' +
+                        '<div class="col-xs-1 offset-1 pl-4">' +
+                            '<img class="rounded-circle comment-image" src="{{ user.profile.image.url }}" />'+
+                        '</div>' +
+                        '<div class="col-xs-4">' +
+                            '<a class="mr-2 comment-author-name" href="#">' + '{{user.first_name}} ' + '{{ user.last_name }}' + '</a>' +
+                            '<small class="text-muted comment-time"><br>' + 'Just now' + '</small>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="row">'+
+                        '<div class="col-sm-12 offset-1">' +
+                            '<p class="comment-content">' + data.comment + '</p>' +
+                        '</div>' +
+                    '</div>';
+
+                    var theDiv = document.getElementById(commentSectionID);
+                    theDiv.innerHTML += newComment; 
+
+
+                }
+                //success:function(){
+                //    alert("I guess it's a success?");
+                    // var postIDString = json.post_id.toString();
+                    // var commentSectionClassName = "#" + postIDString + "-comment-section";
+
+                    /* USEFUL BIT ************
+
+                    var postIDString = post_id.toString();
+                    var commentSection = "#" + postIDString + "-comment-section";
+                    console.log(postIDString);
+                    console.log(commentSection);
+
+                    document.getElementById(postIDString).reset();
+                    var newComment = '<div class="row">' +
+                        '<div class="col-xs-1 offset-1 pl-4">' +
+                            '<img class="rounded-circle comment-image" src="{{ user.profile.image.url }}" />'+
+                        '</div>' +
+                        '<div class="col-xs-4">' +
+                            '<a class="mr-2 comment-author-name" href="#">' + '{{user.first_name}}' + '{{ user.last_name }}' + '</a>' +
+                            '<small class="text-muted comment-time"><br>' + 'Just now' + '</small>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="row">'+
+                        '<div class="col-sm-12 offset-1">' +
+                            '<p class="comment-content">' + '</p>' +
+                        '</div>' +
+                    '</div>';
+                    commentSection.innerHTML += newComment
+                    
+                    ******************/
+
+                    /*$(commentSectionClassName).append(
+                    '<div class="row">' +
+                        '<div class="col-xs-1 offset-1 pl-4">' +
+                            '<img class="rounded-circle comment-image" src="{{ user.profile.image.url }}" />'+
+                        '</div>' +
+                        '<div class="col-xs-4">' +
+                            '<a class="mr-2 comment-author-name" href="#">' + '{{user.first_name}}' + '{{ user.last_name }}' + '</a>' +
+                            '<small class="text-muted comment-time"><br>' + 'Just now' + '</small>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="row">'+
+                        '<div class="col-sm-12 offset-1">' +
+                            '<p class="comment-content">' + '</p>' +
+                        '</div>' +
+                    '</div>' 
+                    )*/
+
+                //error : function(xhr,errmsg,err) {
+                //console.log(xhr.status + ": " + xhr.responseText);
+                //}
+            });
+        }
     </script>
 {% endblock content %}
