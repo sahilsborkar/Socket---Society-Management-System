@@ -42,7 +42,6 @@
                 </form>
             </div>
             {% for comment in post.comments.all %}
-            
             <div class="row">
                 <div class="col-xs-1 offset-1 pl-4">
                     <img class="rounded-circle comment-image" src="{{ comment.author.profile.image.url }}" />
@@ -79,12 +78,6 @@
                     csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
                 },
                 dataType:'text',
-                /*success: function () {
-                    OnSuccess(data.post_id, data.comment)
-                },
-                error: function () {
-                    OnError(data.post_id, data.comment)
-                },*/
                 success:function(json) {
                     // Handle the complete event
                     var data = JSON.parse(json);
@@ -106,60 +99,7 @@
 
                     var theDiv = document.getElementById(commentSectionID);
                     theDiv.innerHTML += newComment; 
-
-
                 }
-                //success:function(){
-                //    alert("I guess it's a success?");
-                    // var postIDString = json.post_id.toString();
-                    // var commentSectionClassName = "#" + postIDString + "-comment-section";
-
-                    /* USEFUL BIT ************
-
-                    var postIDString = post_id.toString();
-                    var commentSection = "#" + postIDString + "-comment-section";
-                    console.log(postIDString);
-                    console.log(commentSection);
-
-                    document.getElementById(postIDString).reset();
-                    var newComment = '<div class="row">' +
-                        '<div class="col-xs-1 offset-1 pl-4">' +
-                            '<img class="rounded-circle comment-image" src="{{ user.profile.image.url }}" />'+
-                        '</div>' +
-                        '<div class="col-xs-4">' +
-                            '<a class="mr-2 comment-author-name" href="#">' + '{{user.first_name}}' + '{{ user.last_name }}' + '</a>' +
-                            '<small class="text-muted comment-time"><br>' + 'Just now' + '</small>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="row">'+
-                        '<div class="col-sm-12 offset-1">' +
-                            '<p class="comment-content">' + '</p>' +
-                        '</div>' +
-                    '</div>';
-                    commentSection.innerHTML += newComment
-                    
-                    ******************/
-
-                    /*$(commentSectionClassName).append(
-                    '<div class="row">' +
-                        '<div class="col-xs-1 offset-1 pl-4">' +
-                            '<img class="rounded-circle comment-image" src="{{ user.profile.image.url }}" />'+
-                        '</div>' +
-                        '<div class="col-xs-4">' +
-                            '<a class="mr-2 comment-author-name" href="#">' + '{{user.first_name}}' + '{{ user.last_name }}' + '</a>' +
-                            '<small class="text-muted comment-time"><br>' + 'Just now' + '</small>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="row">'+
-                        '<div class="col-sm-12 offset-1">' +
-                            '<p class="comment-content">' + '</p>' +
-                        '</div>' +
-                    '</div>' 
-                    )*/
-
-                //error : function(xhr,errmsg,err) {
-                //console.log(xhr.status + ": " + xhr.responseText);
-                //}
             });
         }
     </script>
